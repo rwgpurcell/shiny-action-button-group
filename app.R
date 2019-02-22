@@ -3,11 +3,11 @@ library(shiny)
 ui <- fluidPage(
   fluidRow(
     column(2,
-      actionButton("button1", "1"),br(),
-      actionButton("button2", "2"),br(),
-      actionButton("button3", "3"),br(),
-      actionButton("button4", "4"),br(),
-      actionButton("button5", "5")
+      uiOutput("buttonSet")
+      # actionButton("button2", "2"),br(),
+      # actionButton("button3", "3"),br(),
+      # actionButton("button4", "4"),br(),
+      # actionButton("button5", "5")
     ),
     column(10,
       hr(),
@@ -23,7 +23,8 @@ server <- function(input, output){
   
   output$buttonValue <- renderText(buttonData$lastPress)
   
-  for(i in 1:5){
+  nButtons <- 8
+  for(i in 1:nButtons){
     local({
       my_i <- i
       observeEvent(input[[paste0("button",my_i)]], {
@@ -33,6 +34,13 @@ server <- function(input, output){
     })
   }
   
+  button_list <- lapply(1:nButtons, function(i) {
+    tagList(actionButton(paste0("button",i), i),br())
+  })
+  
+  output$buttonSet <- renderUI({
+    button_list
+  })
   # observeEvent(input$button1, {
   #   buttonData$presses <- buttonData$presses +1
   #   buttonData$lastPress <- 1
@@ -59,6 +67,7 @@ server <- function(input, output){
   # })
   # 
   
+  #If you want an action triggered for repeat presses of the same button, the eventExpr needs to contain something that changes every press
   buttonSetAction <- observeEvent(c(buttonData$lastPress,buttonData$presses),{
     v$data <- rnorm(10)
   }) 
