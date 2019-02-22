@@ -23,30 +23,41 @@ server <- function(input, output){
   
   output$buttonValue <- renderText(buttonData$lastPress)
   
-  observeEvent(input$button1, {
-    buttonData$presses <- buttonData$presses +1
-    buttonData$lastPress <- 1
-  })
+  for(i in 1:5){
+    local({
+      my_i <- i
+      observeEvent(input[[paste0("button",my_i)]], {
+        buttonData$presses <- buttonData$presses +1
+        buttonData$lastPress <- my_i
+      })
+    })
+  }
   
-  observeEvent(input$button2, {
-    buttonData$presses <- buttonData$presses +1
-    buttonData$lastPress <- 2
-  })
-  
-  observeEvent(input$button3, {
-    buttonData$presses <- buttonData$presses +1
-    buttonData$lastPress <- 3
-  })
-  
-  observeEvent(input$button4, {
-    buttonData$presses <- buttonData$presses +1
-    buttonData$lastPress <- 4
-  })
-  
-  observeEvent(input$button5, {
-    buttonData$presses <- buttonData$presses +1
-    buttonData$lastPress <- 5
-  })
+  # observeEvent(input$button1, {
+  #   buttonData$presses <- buttonData$presses +1
+  #   buttonData$lastPress <- 1
+  # })
+  # 
+  # observeEvent(input$button2, {
+  #   buttonData$presses <- buttonData$presses +1
+  #   buttonData$lastPress <- 2
+  # })
+  # 
+  # observeEvent(input$button3, {
+  #   buttonData$presses <- buttonData$presses +1
+  #   buttonData$lastPress <- 3
+  # })
+  # 
+  # observeEvent(input$button4, {
+  #   buttonData$presses <- buttonData$presses +1
+  #   buttonData$lastPress <- 4
+  # })
+  # 
+  # observeEvent(input$button5, {
+  #   buttonData$presses <- buttonData$presses +1
+  #   buttonData$lastPress <- 5
+  # })
+  # 
   
   buttonSetAction <- observeEvent(c(buttonData$lastPress,buttonData$presses),{
     v$data <- rnorm(10)
