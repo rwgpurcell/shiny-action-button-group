@@ -1,6 +1,7 @@
 library(shiny)
 
 ui <- fluidPage(
+  h2("Click the buttons to add Points"),
   fluidRow(
     column(2,
       uiOutput("buttonSet")
@@ -12,6 +13,7 @@ ui <- fluidPage(
     column(10,
       hr(),
       textOutput("buttonValue"),
+      br(),
       plotOutput("plot")
     )
   )
@@ -21,9 +23,10 @@ server <- function(input, output){
 
   buttonData <- reactiveValues(presses=0)
   
-  output$buttonValue <- renderText(buttonData$lastPress)
+  output$buttonValue <- renderText(
+    paste("The most recently clicked button was: ",buttonData$lastPress))
   
-  nButtons <- 8
+  nButtons <- 10
   for(i in 1:nButtons){
     local({
       my_i <- i
@@ -69,10 +72,11 @@ server <- function(input, output){
   
   #If you want an action triggered for repeat presses of the same button, the eventExpr needs to contain something that changes every press
   buttonSetAction <- observeEvent(c(buttonData$lastPress,buttonData$presses),{
-    v$data <- rnorm(10)
+    req(buttonData$lastPress)
+    v$data <- c(v$data,rnorm(5,mean = buttonData$lastPress))
   }) 
   
-  v <- reactiveValues(data = NULL)
+  v <- reactiveValues(data = c())
   
   # observeEvent(input$button2, {
   #   v$data <- rnorm(100)
