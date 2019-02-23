@@ -1,0 +1,3 @@
+This is a Shiny module that creates a button panel; in other words, a set of action buttons whose presses all do "kind of the same thing".
+
+This doesn't take all that much R code to create, but requires a set of n observeEvent objects and a reactiveValues for each panel of n buttons (plus n action buttons themselves), which gets ugly quickly. You can reduce the amount of code using lapply and for loops to render all this serverside, but it's just much nicer to have it abstracted into its own module.
